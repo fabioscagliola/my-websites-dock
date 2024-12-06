@@ -32,3 +32,5 @@ make down
 
 And do not forget to clean up the `/etc/hosts` file.
 
+ansible-playbook my-websites-dock.yml --ask-vault-pass
+

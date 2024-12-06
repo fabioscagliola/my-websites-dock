@@ -1,0 +1,50 @@
+---
+
+- name: Build the image
+  hosts: localhost
+  tags: build
+  tasks:
+    - name: Create a temporary folder
+      ansible.builtin.file:
+        state: directory
+        path: /tmp/my-websites-dock
+
+    - name: Build the image
+      community.docker.docker_image:
+        name: my-websites-dock
+        archive_path: /tmp/my-websites-dock/my-websites-dock.tar
+        source: build
+        force_source: true
+        build:
+          path: .
+          nocache: true
+
+    - name: Compress the image
+      community.general.archive:
+        path: /tmp/my-websites-dock/my-websites-dock.tar
+
+- name: Upload, extract, load, and delete the images
+  hosts: my-websites-dock
+  tags: upload
+  tasks:
+    - name: Upload the image to the server
+      ansible.builtin.copy:
+        src: /tmp/my-websites-dock/my-websites-dock.tar
+        dest: /my-websites-dock.tar.gz
+
+    - name: Extract the image
+      ansible.builtin.command: gzip -d /my-websites-dock.tar.gz
+      args:
+        creates: /my-websites-dock.tar
+
+    - name: Load the image
+      community.docker.docker_image:
+        load_path: /my-websites-dock.tar
+        name: my-websites-dock
+        source: load
+
+    - name: Delete the image
+      ansible.builtin.file:
+        path: /my-websites-dock.tar
+        state: absent
+
