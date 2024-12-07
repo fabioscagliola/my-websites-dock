@@ -1,36 +1,18 @@
 # My Websites' Dock
 
-Anchoring my websites in a container
+*Anchoring my websites in a container*
 
-This project uses Docker to host multiple websites in one container using nginx, based on the "Host" header.
+## Overview
 
-## Usage
+I use Docker to host my static websites in one nginx container.
 
-Build the image and start the container using the following command.
+I wrote [this Terraform configuration file](main.tf) to create a VM on Azure where the container is hosted.
 
-```bash
-make up
+I manually installed Docker on the VM, and then I wrote [this Ansible playbook](my-websites-dock.yml) to build and deploy the container to the VM.
+
+So, in order to redeploy my websites, I run the following command.
+
 ```
-
-Edit your `/etc/hosts` to include the following line.
-
-```bash
-127.0.0.1       fabioscagliola.com
+ansible-playbook my-websites-dock.yml
 ```
-
-Give it a try by requesting one of the websites using the following command.
-
-```bash
-curl -H https://fabioscagliola.com
-```
-
-Stop and remove the container using the following command.
-
-```bash
-make down
-```
-
-And do not forget to clean up the `/etc/hosts` file.
-
-ansible-playbook my-websites-dock.yml --ask-vault-pass
 

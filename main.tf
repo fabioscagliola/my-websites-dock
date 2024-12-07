@@ -101,14 +101,17 @@ resource "azurerm_subnet_network_security_group_association" "subnet_network_sec
 
 resource "azurerm_linux_virtual_machine" "virtual_machine" {
   name                            = "virtual_machine"
-  admin_password                  = "97J*TbeKQ!GNeCkAZ$Whnb"
   admin_username                  = "fabioscagliola"
   computer_name                   = "my-websites-dock"
-  disable_password_authentication = "false"
   location                        = azurerm_resource_group.resource_group.location
   network_interface_ids = [azurerm_network_interface.network_interface.id]
   resource_group_name             = azurerm_resource_group.resource_group.name
   size                            = "Standard_B2ts_v2"
+
+  admin_ssh_key {
+    username   = "fabioscagliola"
+    public_key = file("~/.ssh/thesoftwaretailors.com.pub")
+  }
 
   os_disk {
     name                 = "storage_os_disk"
