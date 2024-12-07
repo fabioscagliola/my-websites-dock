@@ -1,5 +1,3 @@
-*.crt
-*.key
-
 .terraform
+websites
 
