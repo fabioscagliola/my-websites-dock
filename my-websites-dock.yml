@@ -1,20 +1,53 @@
 ---
 
-- name: Build my site and blog using Hugo
+- name: Build the websites
   hosts: localhost
-  tags: fabioscagliola
-  vars:
-    source: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-site-and-blog/fabioscagliola
-    target: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/fabioscagliola.com/contents
+  tags: build-sites
   tasks:
-    - name: Build my site and blog using Hugo
-      command: 'hugo -d {{ target }} -s {{ source }}'
+    - name: Create the contents folders
+      ansible.builtin.file:
+        path: './websites/{{ item }}/contents'
+        state: directory
+      loop:
+        - fabioscagliola.com
+        - laurabernasconi.com
+        - nothence.com
+        - step.fabioscagliola.com
+    - name: Delete the public folders of the websites made with Hugo
+      ansible.builtin.file:
+        path: '{{ item }}/public'
+        state: absent
+      loop:
+        - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-site-and-blog/fabioscagliola
+        - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/bernie/website
+        - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Nothence/nothence
+    - name: Build the websites made with Hugo
+      command: hugo
       args:
-        chdir: '{{ source }}'
+        chdir: '{{ item }}'
+      loop:
+        - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-site-and-blog/fabioscagliola
+        - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/bernie/website
+        - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Nothence/nothence
+    - name: Copy the contents of the websites made with Hugo
+      ansible.builtin.copy:
+        src: '{{ item.source }}/public/'
+        dest: '{{ item.target }}'
+      loop:
+        - source: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-site-and-blog/fabioscagliola
+          target: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/fabioscagliola.com/contents
+        - source: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/bernie/website
+          target: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/laurabernasconi.com/contents
+        - source: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Nothence/nothence
+          target: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/nothence.com/contents
+    - name: Copy the Step website
+      ansible.builtin.copy:
+        src: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Step/src/
+        dest: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/step.fabioscagliola.com/contents
 
 - name: Build the image
   hosts: localhost
-  tags: build
+  tags: build-image
   tasks:
     - name: Create a temporary folder
       ansible.builtin.file:
@@ -38,7 +71,7 @@
 
 - name: Deploy the container
   become: true
-  hosts: my-websites-dock
+  hosts: my_websites_dock
   tags: deploy
   tasks:
     - name: Stop the container
@@ -86,13 +119,26 @@
   hosts: localhost
   tags: cleanup
   tasks:
+    - name: Delete the contents folders
+      ansible.builtin.file:
+        path: './websites/{{ item }}/contents'
+        state: absent
+      loop:
+        - fabioscagliola.com
+        - laurabernasconi.com
+        - nothence.com
+        - step.fabioscagliola.com
+
     - name: Delete the temporary folder
       ansible.builtin.file:
         path: /tmp/my-websites-dock
         state: absent
 
-    - name: Delete the image
+    - name: Delete the images
       community.docker.docker_image:
-        name: my-websites-dock
+        name: '{{ item }}'
         state: absent
+      loop:
+        - my-websites-dock
+        - nginx
 
