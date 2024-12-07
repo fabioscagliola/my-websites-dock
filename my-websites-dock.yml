@@ -13,6 +13,8 @@
         - laurabernasconi.com
         - nothence.com
         - step.fabioscagliola.com
+        - thesoftwaretailors.com
+
     - name: Delete the public folders of the websites made with Hugo
       ansible.builtin.file:
         path: '{{ item }}/public'
@@ -21,6 +23,7 @@
         - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-site-and-blog/fabioscagliola
         - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/bernie/website
         - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Nothence/nothence
+
     - name: Build the websites made with Hugo
       command: hugo
       args:
@@ -29,6 +32,7 @@
         - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-site-and-blog/fabioscagliola
         - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/bernie/website
         - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Nothence/nothence
+
     - name: Copy the contents of the websites made with Hugo
       ansible.builtin.copy:
         src: '{{ item.source }}/public/'
@@ -40,10 +44,16 @@
           target: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/laurabernasconi.com/contents
         - source: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Nothence/nothence
           target: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/nothence.com/contents
+
     - name: Copy the Step website
       ansible.builtin.copy:
         src: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Step/src/
         dest: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/step.fabioscagliola.com/contents
+
+    - name: Copy The Software Tailors' website
+      ansible.builtin.copy:
+        src: /Users/fabioscagliola/Documents/Tailors/Website/TheSoftwareTailorsSite/
+        dest: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/thesoftwaretailors.com/contents
 
 - name: Build the image
   hosts: localhost
@@ -128,6 +138,7 @@
         - laurabernasconi.com
         - nothence.com
         - step.fabioscagliola.com
+        - thesoftwaretailors.com
 
     - name: Delete the temporary folder
       ansible.builtin.file:

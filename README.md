@@ -6,7 +6,7 @@
 
 I use Docker to host all my static websites in one nginx container.
 
-I wrote [this Terraform configuration file](main.tf) to create a VM on Azure where the container is hosted.
+I wrote [this Terraform configuration file](main.tf) to create a VM on Azure, where the container is hosted.
 
 I manually installed Docker on the VM, then I wrote [this Ansible playbook](my-websites-dock.yml) to build and deploy the container to the VM.
 
