@@ -60,6 +60,11 @@
         src: /Users/fabioscagliola/Documents/Tailors/Not For Prof.it/NotForProfSite/
         dest: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/notforprof.it/contents
 
+    - name: Copy the Post mortem memento vivere website
+      ansible.builtin.copy:
+        src: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/pmmv/contents/
+        dest: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/pmmv.nothence.com/contents
+
     - name: Copy the Step website
       ansible.builtin.copy:
         src: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Step/src/
@@ -155,6 +160,7 @@
         - laurabernasconi.com
         - notforprof.it
         - nothence.com
+        - pmmv.nothence.com
         - step.fabioscagliola.com
         - thesoftwaretailors.com
 
