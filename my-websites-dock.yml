@@ -45,6 +45,21 @@
         - source: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Nothence/nothence
           target: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/nothence.com/contents
 
+    - name: Copy the Assess Your Security website
+      ansible.builtin.copy:
+        src: /Users/fabioscagliola/Documents/Tailors/Assess Your Security/AssessYourSecuritySite/
+        dest: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/assessyoursecurity.com/contents
+
+    - name: Copy the Blood Bank Hub website
+      ansible.builtin.copy:
+        src: /Users/fabioscagliola/Documents/Tailors/Blood Bank Hub/BloodBankHubSite/
+        dest: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/bloodbankhub.com/contents
+
+    - name: Copy the Not For Prof.it website
+      ansible.builtin.copy:
+        src: /Users/fabioscagliola/Documents/Tailors/Not For Prof.it/NotForProfSite/
+        dest: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/notforprof.it/contents
+
     - name: Copy the Step website
       ansible.builtin.copy:
         src: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Step/src/
@@ -134,8 +149,11 @@
         path: './websites/{{ item }}/contents'
         state: absent
       loop:
+        - assessyoursecurity.com
+        - bloodbankhub.com
         - fabioscagliola.com
         - laurabernasconi.com
+        - notforprof.it
         - nothence.com
         - step.fabioscagliola.com
         - thesoftwaretailors.com
