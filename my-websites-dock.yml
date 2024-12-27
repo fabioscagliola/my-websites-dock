@@ -4,16 +4,37 @@
   hosts: localhost
   tags: build-sites
   tasks:
-    - name: Create the contents folders
+    - name: Create the websites' folders
       ansible.builtin.file:
         path: './websites/{{ item }}/contents'
         state: directory
       loop:
+        - assessyoursecurity.com
+        - bloodbankhub.com
         - fabioscagliola.com
         - laurabernasconi.com
+        - notforprof.it
         - nothence.com
+        - pmmv.nothence.com
         - step.fabioscagliola.com
         - thesoftwaretailors.com
+
+    - name: Create a temporary folder
+      ansible.builtin.file:
+        path: /tmp/my-websites-dock
+        state: directory
+
+    - name: Clone the repos
+      ansible.builtin.git:
+        repo: '{{ item }}'
+        dest: /tmp/my-websites-dock
+      loop:
+        - repo: git@github.com:fabioscagliola/my-site-and-blog.git
+          dest: fabioscagliola.com
+        - repo: git@github.com:fabioscagliola/bernie.git
+          dest: laurabernasconi.com
+        - repo: git@github.com:fabioscagliola/Nothence.git
+          dest: nothence.com
 
     - name: Delete the public folders of the websites made with Hugo
       ansible.builtin.file:
@@ -39,51 +60,46 @@
         dest: '{{ item.target }}'
       loop:
         - source: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-site-and-blog/fabioscagliola
-          target: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/fabioscagliola.com/contents
+          target: /tmp/my-websites-dock/websites/fabioscagliola.com/contents
         - source: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/bernie/website
-          target: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/laurabernasconi.com/contents
+          target: /tmp/my-websites-dock/websites/laurabernasconi.com/contents
         - source: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Nothence/nothence
-          target: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/nothence.com/contents
+          target: /tmp/my-websites-dock/websites/nothence.com/contents
 
-    - name: Copy the Assess Your Security website
-      ansible.builtin.copy:
-        src: /Users/fabioscagliola/Documents/Tailors/Assess Your Security/AssessYourSecuritySite/
-        dest: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/assessyoursecurity.com/contents
-
-    - name: Copy the Blood Bank Hub website
-      ansible.builtin.copy:
-        src: /Users/fabioscagliola/Documents/Tailors/Blood Bank Hub/BloodBankHubSite/
-        dest: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/bloodbankhub.com/contents
-
-    - name: Copy the Not For Prof.it website
-      ansible.builtin.copy:
-        src: /Users/fabioscagliola/Documents/Tailors/Not For Prof.it/NotForProfSite/
-        dest: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/notforprof.it/contents
-
-    - name: Copy the Post mortem memento vivere website
-      ansible.builtin.copy:
-        src: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/pmmv/contents/
-        dest: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/pmmv.nothence.com/contents
-
-    - name: Copy the Step website
-      ansible.builtin.copy:
-        src: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Step/src/
-        dest: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/step.fabioscagliola.com/contents
-
-    - name: Copy The Software Tailors' website
-      ansible.builtin.copy:
-        src: /Users/fabioscagliola/Documents/Tailors/Website/TheSoftwareTailorsSite/
-        dest: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-websites-dock/websites/thesoftwaretailors.com/contents
+#    - name: Copy the Assess Your Security website
+#      ansible.builtin.copy:
+#        src: /Users/fabioscagliola/Documents/Tailors/Assess Your Security/AssessYourSecuritySite/
+#        dest: /tmp/my-websites-dock/websites/assessyoursecurity.com/contents
+#
+#    - name: Copy the Blood Bank Hub website
+#      ansible.builtin.copy:
+#        src: /Users/fabioscagliola/Documents/Tailors/Blood Bank Hub/BloodBankHubSite/
+#        dest: /tmp/my-websites-dock/websites/bloodbankhub.com/contents
+#
+#    - name: Copy the Not For Prof.it website
+#      ansible.builtin.copy:
+#        src: /Users/fabioscagliola/Documents/Tailors/Not For Prof.it/NotForProfSite/
+#        dest: /tmp/my-websites-dock/websites/notforprof.it/contents
+#
+#    - name: Copy the Post mortem memento vivere website
+#      ansible.builtin.copy:
+#        src: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/pmmv/contents/
+#        dest: /tmp/my-websites-dock/websites/pmmv.nothence.com/contents
+#
+#    - name: Copy the Step website
+#      ansible.builtin.copy:
+#        src: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Step/src/
+#        dest: /tmp/my-websites-dock/websites/step.fabioscagliola.com/contents
+#
+#    - name: Copy The Software Tailors' website
+#      ansible.builtin.copy:
+#        src: /Users/fabioscagliola/Documents/Tailors/Website/TheSoftwareTailorsSite/
+#        dest: /tmp/my-websites-dock/websites/thesoftwaretailors.com/contents
 
 - name: Build the image
   hosts: localhost
   tags: build-image
   tasks:
-    - name: Create a temporary folder
-      ansible.builtin.file:
-        path: /tmp/my-websites-dock
-        state: directory
-
     - name: Build the image
       community.docker.docker_image:
         archive_path: /tmp/my-websites-dock/my-websites-dock.tar
@@ -151,18 +167,8 @@
   tasks:
     - name: Delete the contents folders
       ansible.builtin.file:
-        path: './websites/{{ item }}/contents'
+        path: ./websites
         state: absent
-      loop:
-        - assessyoursecurity.com
-        - bloodbankhub.com
-        - fabioscagliola.com
-        - laurabernasconi.com
-        - notforprof.it
-        - nothence.com
-        - pmmv.nothence.com
-        - step.fabioscagliola.com
-        - thesoftwaretailors.com
 
     - name: Delete the temporary folder
       ansible.builtin.file:
