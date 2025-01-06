@@ -26,8 +26,8 @@
 
     - name: Clone the repos
       ansible.builtin.git:
-        repo: '{{ item }}'
-        dest: /tmp/my-websites-dock
+        repo: '{{ item.repo }}'
+        dest: '/tmp/my-websites-dock/{{ item.dest }}'
       loop:
         - repo: git@github.com:fabioscagliola/my-site-and-blog.git
           dest: fabioscagliola.com
@@ -41,30 +41,30 @@
         path: '{{ item }}/public'
         state: absent
       loop:
-        - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-site-and-blog/fabioscagliola
-        - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/bernie/website
-        - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Nothence/nothence
+        - /tmp/my-websites-dock/fabioscagliola.com/fabioscagliola
+        - /tmp/my-websites-dock/laurabernasconi.com/website
+        - //tmp/my-websites-dock/nothence.com/nothence
 
     - name: Build the websites made with Hugo
       command: hugo
       args:
         chdir: '{{ item }}'
       loop:
-        - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-site-and-blog/fabioscagliola
-        - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/bernie/website
-        - /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Nothence/nothence
+        - /tmp/my-websites-dock/fabioscagliola.com/fabioscagliola
+        - /tmp/my-websites-dock/laurabernasconi.com/website
+        - //tmp/my-websites-dock/nothence.com/nothence
 
     - name: Copy the contents of the websites made with Hugo
       ansible.builtin.copy:
         src: '{{ item.source }}/public/'
-        dest: '{{ item.target }}'
+        dest: './websites/{{ item.target }}/contents'
       loop:
-        - source: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/my-site-and-blog/fabioscagliola
-          target: /tmp/my-websites-dock/websites/fabioscagliola.com/contents
-        - source: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/bernie/website
-          target: /tmp/my-websites-dock/websites/laurabernasconi.com/contents
-        - source: /Users/fabioscagliola/Documents/GitHub/fabioscagliola/Nothence/nothence
-          target: /tmp/my-websites-dock/websites/nothence.com/contents
+        - source: /tmp/my-websites-dock/fabioscagliola.com/fabioscagliola
+          target: fabioscagliola.com
+        - source: /tmp/my-websites-dock/laurabernasconi.com/website
+          target: laurabernasconi.com
+        - source: //tmp/my-websites-dock/nothence.com/nothence
+          target: nothence.com
 
 #    - name: Copy the Assess Your Security website
 #      ansible.builtin.copy:
