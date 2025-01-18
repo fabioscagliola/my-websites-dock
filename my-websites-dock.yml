@@ -17,6 +17,7 @@
         - nothence.com
         - pmmv.nothence.com
         - step.fabioscagliola.com
+        - thecodetailors.com
         - thesoftwaretailors.com
 
     - name: Copy the .crt files
@@ -30,6 +31,7 @@
         - laurabernasconi.com
         - notforprof.it
         - nothence.com
+        - thecodetailors.com
         - thesoftwaretailors.com
 
     - name: Copy the .key files
@@ -43,6 +45,7 @@
         - laurabernasconi.com
         - notforprof.it
         - nothence.com
+        - thecodetailors.com
         - thesoftwaretailors.com
 
     - name: Create a temporary folder
@@ -71,6 +74,8 @@
           dest: pmmv.nothence.com
         - repo: git@github.com:fabioscagliola/Step.git
           dest: step.fabioscagliola.com
+        - repo: git@github.com:fabioscagliola/TheCodeTailors.git
+          dest: thecodetailors.com
         - repo: git@ssh.dev.azure.com:v3/TheSoftwareTailors/Website/Website
           dest: thesoftwaretailors.com
 
@@ -113,6 +118,8 @@
           target: pmmv.nothence.com
         - source: /tmp/my-websites-dock/step.fabioscagliola.com/src
           target: step.fabioscagliola.com
+        - source: /tmp/my-websites-dock/thecodetailors.com/site
+          target: thecodetailors.com
         - source: /tmp/my-websites-dock/thesoftwaretailors.com/TheSoftwareTailorsSite
           target: thesoftwaretailors.com
 

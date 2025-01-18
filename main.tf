@@ -18,14 +18,14 @@ resource "azurerm_resource_group" "resource_group" {
 
 resource "azurerm_virtual_network" "virtual_network" {
   name                = "virtual_network"
-  address_space = ["192.168.0.0/16"]
+  address_space       = ["192.168.0.0/16"]
   location            = azurerm_resource_group.resource_group.location
   resource_group_name = azurerm_resource_group.resource_group.name
 }
 
 resource "azurerm_subnet" "subnet" {
   name                 = "subnet"
-  address_prefixes = ["192.168.1.0/24"]
+  address_prefixes     = ["192.168.1.0/24"]
   resource_group_name  = azurerm_resource_group.resource_group.name
   virtual_network_name = azurerm_virtual_network.virtual_network.name
 }
@@ -100,13 +100,13 @@ resource "azurerm_subnet_network_security_group_association" "subnet_network_sec
 }
 
 resource "azurerm_linux_virtual_machine" "virtual_machine" {
-  name                            = "virtual_machine"
-  admin_username                  = "fabioscagliola"
-  computer_name                   = "my-websites-dock"
-  location                        = azurerm_resource_group.resource_group.location
+  name                  = "virtual_machine"
+  admin_username        = "fabioscagliola"
+  computer_name         = "my-websites-dock"
+  location              = azurerm_resource_group.resource_group.location
   network_interface_ids = [azurerm_network_interface.network_interface.id]
-  resource_group_name             = azurerm_resource_group.resource_group.name
-  size                            = "Standard_B2ts_v2"
+  resource_group_name   = azurerm_resource_group.resource_group.name
+  size                  = "Standard_B2ts_v2"
 
   admin_ssh_key {
     username   = "fabioscagliola"
