@@ -22,7 +22,7 @@
 
     - name: Copy the .crt files
       ansible.builtin.copy:
-        src: '/Users/fabioscagliola/Library/CloudStorage/OneDrive-TheCodeTailorsSL/Data/certificates/{{ item }}/{{ item }}.crt'
+        src: '/home/fabioscagliola/Downloads/certificates/{{ item }}/{{ item }}.crt'
         dest: './websites/{{ item }}'
       loop:
         - assessyoursecurity.com
@@ -36,7 +36,7 @@
 
     - name: Copy the .key files
       ansible.builtin.copy:
-        src: '/Users/fabioscagliola/Library/CloudStorage/OneDrive-TheCodeTailorsSL/Data/certificates/{{ item }}/{{ item }}.key'
+        src: '/home/fabioscagliola/Downloads/certificates/{{ item }}/{{ item }}.key'
         dest: './websites/{{ item }}'
       loop:
         - assessyoursecurity.com
@@ -76,8 +76,6 @@
           dest: step.fabioscagliola.com
         - repo: git@github.com:fabioscagliola/TheCodeTailors.git
           dest: thecodetailors.com
-        - repo: git@ssh.dev.azure.com:v3/TheSoftwareTailors/Website/Website
-          dest: thesoftwaretailors.com
 
     - name: Delete the public folders of the websites made with Hugo
       ansible.builtin.file:
@@ -120,8 +118,6 @@
           target: step.fabioscagliola.com
         - source: /tmp/my-websites-dock/thecodetailors.com/site
           target: thecodetailors.com
-        - source: /tmp/my-websites-dock/thesoftwaretailors.com/TheSoftwareTailorsSite
-          target: thesoftwaretailors.com
 
 - name: Build the image
   hosts: localhost
