@@ -76,6 +76,8 @@
           dest: step.fabioscagliola.com
         - repo: git@github.com:fabioscagliola/TheCodeTailors.git
           dest: thecodetailors.com
+        - repo: git@ssh.dev.azure.com:v3/TheSoftwareTailors/Website/Website
+          dest: thesoftwaretailors.com
 
     - name: Delete the public folders of the websites made with Hugo
       ansible.builtin.file:
@@ -118,6 +120,8 @@
           target: step.fabioscagliola.com
         - source: /tmp/my-websites-dock/thecodetailors.com/site
           target: thecodetailors.com
+        - source: /tmp/my-websites-dock/thesoftwaretailors.com/TheSoftwareTailorsSite
+          target: thesoftwaretailors.com
 
 - name: Build the image
   hosts: localhost
