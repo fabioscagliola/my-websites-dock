@@ -14,6 +14,7 @@
         - fabioscagliola.com
         - laurabernasconi.com
         - notforprof.it
+        - nerdyweirdwords.com
         - nothence.com
         - pmmv.nothence.com
         - step.fabioscagliola.com
@@ -29,6 +30,7 @@
         - bloodbankhub.com
         - fabioscagliola.com
         - laurabernasconi.com
+        - nerdyweirdwords.com
         - notforprof.it
         - nothence.com
         - thecodetailors.com
@@ -43,6 +45,7 @@
         - bloodbankhub.com
         - fabioscagliola.com
         - laurabernasconi.com
+        - nerdyweirdwords.com
         - notforprof.it
         - nothence.com
         - thecodetailors.com
@@ -66,6 +69,8 @@
           dest: fabioscagliola.com
         - repo: git@github.com:fabioscagliola/bernie.git
           dest: laurabernasconi.com
+        - repo: git@github.com:fabioscagliola/NerdyWeirdWords.git
+          dest: nerdyweirdwords.com
         - repo: git@ssh.dev.azure.com:v3/TheSoftwareTailors/Not%20For%20Prof.it/Not%20For%20Prof.it
           dest: notforprof.it
         - repo: git@github.com:fabioscagliola/Nothence.git
@@ -110,7 +115,9 @@
           target: fabioscagliola.com
         - source: /tmp/my-websites-dock/laurabernasconi.com/website/public
           target: laurabernasconi.com
-        - source: /tmp/my-websites-dock/notforprof.it/NotForProfSite
+        - source: nerdyweirdwords.com/NerdyWeirdWords/NerdyWeirdWords
+          target: nerdyweirdwords.com
+        - source: /tmp/my-websites-dock/tmp/my-websites-dock/notforprof.it/NotForProfSite
           target: notforprof.it
         - source: /tmp/my-websites-dock/nothence.com/nothence/public
           target: nothence.com
