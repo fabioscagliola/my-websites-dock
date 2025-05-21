@@ -138,13 +138,9 @@
         name: my-websites-dock
         source: build
 
-    - name: Compress the image
-      community.general.archive:
-        path: /tmp/my-websites-dock/my-websites-dock.tar
-
 - name: Deploy the container
   become: true
-  hosts: my_websites_dock
+  hosts: localhost
   tags: deploy
   tasks:
     - name: Stop the container
@@ -152,31 +148,6 @@
         image: my-websites-dock
         name: my-websites-dock
         state: stopped
-
-    - name: Prune the containers
-      command: docker container prune -f
-
-    - name: Prune the images
-      command: docker image prune -a -f
-
-    - name: Upload the image to the server
-      ansible.builtin.copy:
-        src: /tmp/my-websites-dock/my-websites-dock.tar.gz
-        dest: /data/my-websites-dock.tar.gz
-
-    - name: Extract the image
-      ansible.builtin.command: gzip -d /data/my-websites-dock.tar.gz
-
-    - name: Load the image
-      community.docker.docker_image:
-        load_path: /data/my-websites-dock.tar
-        name: my-websites-dock
-        source: load
-
-    - name: Delete the image
-      ansible.builtin.file:
-        path: /data/my-websites-dock.tar
-        state: absent
 
     - name: Start the container
       community.docker.docker_container:
@@ -207,6 +178,5 @@
         name: '{{ item }}'
         state: absent
       loop:
-        - my-websites-dock
         - nginx
 
