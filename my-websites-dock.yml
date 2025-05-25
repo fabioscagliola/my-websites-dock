@@ -13,6 +13,7 @@
         - bloodbankhub.com
         - fabioscagliola.com
         - laurabernasconi.com
+        - nerdyweirdwords.com
         - notforprof.it
         - nothence.com
         - pmmv.nothence.com
@@ -22,13 +23,14 @@
 
     - name: Copy the .crt files
       ansible.builtin.copy:
-        src: '/home/fabioscagliola/Downloads/certificates/{{ item }}/{{ item }}.crt'
+        src: '~/Downloads/certificates/{{ item }}/{{ item }}.crt'
         dest: './websites/{{ item }}'
       loop:
         - assessyoursecurity.com
         - bloodbankhub.com
         - fabioscagliola.com
         - laurabernasconi.com
+        - nerdyweirdwords.com
         - notforprof.it
         - nothence.com
         - thecodetailors.com
@@ -36,13 +38,14 @@
 
     - name: Copy the .key files
       ansible.builtin.copy:
-        src: '/home/fabioscagliola/Downloads/certificates/{{ item }}/{{ item }}.key'
+        src: '~/Downloads/certificates/{{ item }}/{{ item }}.key'
         dest: './websites/{{ item }}'
       loop:
         - assessyoursecurity.com
         - bloodbankhub.com
         - fabioscagliola.com
         - laurabernasconi.com
+        - nerdyweirdwords.com
         - notforprof.it
         - nothence.com
         - thecodetailors.com
@@ -129,10 +132,8 @@
   tasks:
     - name: Build the image
       community.docker.docker_image:
-        archive_path: /tmp/my-websites-dock/my-websites-dock.tar
         build:
           path: .
-          platform: linux/amd64
           nocache: true
         force_source: true
         name: my-websites-dock
@@ -172,11 +173,4 @@
       ansible.builtin.file:
         path: /tmp/my-websites-dock
         state: absent
-
-    - name: Delete the images
-      community.docker.docker_image:
-        name: '{{ item }}'
-        state: absent
-      loop:
-        - nginx
 
