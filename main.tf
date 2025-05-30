@@ -13,7 +13,7 @@ provider "azurerm" {
 
 resource "azurerm_resource_group" "resource_group" {
   name     = "my-websites-dock"
-  location = "SpainCentral"
+  location = "centralindia"
 }
 
 resource "azurerm_virtual_network" "virtual_network" {
@@ -106,11 +106,11 @@ resource "azurerm_linux_virtual_machine" "virtual_machine" {
   location              = azurerm_resource_group.resource_group.location
   network_interface_ids = [azurerm_network_interface.network_interface.id]
   resource_group_name   = azurerm_resource_group.resource_group.name
-  size                  = "Standard_B2ts_v2"
+  size                  = "Standard_B4als_v2"
 
   admin_ssh_key {
     username   = "fabioscagliola"
-    public_key = file("~/.ssh/thesoftwaretailors.com.pub")
+    public_key = file("~/.ssh/thecodetailors.com.pub")
   }
 
   os_disk {
