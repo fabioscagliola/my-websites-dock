@@ -6,9 +6,7 @@ Anchoring my websites in a container
 
 I use Docker to host all my static websites in one nginx container.
 
-I had initially written [this Terraform configuration file](main.tf) to create a virtual machine on Azure, where the container was hosted.
-
-I later migrated my dock to Hetzner, and there I have not yet terraformed the virtual machine.
+I had initially written [this Terraform configuration file](main.tf) to create a virtual machine on Azure, where the container was hosted. I later migrated my dock to Hetzner, and there I have not yet terraformed the virtual machine.
 
 I installed Docker on the virtual machine using [this Ansible playbook](https://github.com/fabioscagliola/ansible-install-docker-ubuntu), then I wrote [this one](my-websites-dock.yml) to build the image and deploy the container to the virtual machine.
 
@@ -20,7 +18,7 @@ ansible-playbook my-websites-dock.yml
 
 ## Playbook details
 
-The playbook performs the tasks below to build the websites on the local host in a folder structured as follows.
+The playbook performs the tasks described below in order to **build the websites on the local host** in the following folder structure.
 
 ```
 websites
@@ -55,7 +53,7 @@ websites
 - Copy the contents of the websites from the temporary folder
 - Compress the websites folders
 
-Then the playbook performs the following tasks to deploy the websites to the remote host.
+Then the playbook performs the following tasks to **deploy the websites to the remote host**.
 
 - Upload the files required to build the image
 - Extract the compressed websites folder
