@@ -120,7 +120,7 @@
         dest: ./websites.tar.gz
 
 - name: Deploy the websites to the remote host
-  hosts: my_websites_dock
+  hosts: my_websites_dock_001
   tags: copy-websites
   tasks:
     - name: Delete the temporary folder
@@ -149,7 +149,7 @@
         remote_src: yes
 
 - name: Build the image
-  hosts: my_websites_dock
+  hosts: my_websites_dock_001
   tags: build-image
   tasks:
     - name: Build the image
@@ -162,7 +162,7 @@
         source: build
 
 - name: Restart the container
-  hosts: my_websites_dock
+  hosts: my_websites_dock_001
   tags: restart-container
   tasks:
     - name: Restart the container
