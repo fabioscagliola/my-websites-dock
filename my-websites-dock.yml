@@ -1,12 +1,12 @@
 ---
 
-- name: Build the websites
+- name: Build the websites on the local host
   hosts: localhost
   tags: build-sites
   tasks:
-    - name: Create the websites' folders
+    - name: Create the websites folders
       ansible.builtin.file:
-        path: './websites/{{ item }}/contents'
+        path: "./websites/{{ item }}/contents"
         state: directory
       loop:
         - assessyoursecurity.com
@@ -22,8 +22,8 @@
 
     - name: Copy the .crt files
       ansible.builtin.copy:
-        src: '~/Downloads/certificates/{{ item }}/{{ item }}.crt'
-        dest: './websites/{{ item }}'
+        src: "~/Downloads/certificates/{{ item }}/{{ item }}.crt"
+        dest: "./websites/{{ item }}"
       loop:
         - assessyoursecurity.com
         - bloodbankhub.com
@@ -36,8 +36,8 @@
 
     - name: Copy the .key files
       ansible.builtin.copy:
-        src: '~/Downloads/certificates/{{ item }}/{{ item }}.key'
-        dest: './websites/{{ item }}'
+        src: "~/Downloads/certificates/{{ item }}/{{ item }}.key"
+        dest: "./websites/{{ item }}"
       loop:
         - assessyoursecurity.com
         - bloodbankhub.com
@@ -53,10 +53,10 @@
         path: /tmp/my-websites-dock
         state: directory
 
-    - name: Clone the repos
+    - name: Clone the repos to the temporary folder
       ansible.builtin.git:
-        repo: '{{ item.repo }}'
-        dest: '/tmp/my-websites-dock/{{ item.dest }}'
+        repo: "{{ item.repo }}"
+        dest: "/tmp/my-websites-dock/{{ item.dest }}"
       loop:
         - repo: git@ssh.dev.azure.com:v3/TheSoftwareTailors/Assess%20Your%20Security/Assess%20Your%20Security
           dest: assessyoursecurity.com
@@ -79,28 +79,19 @@
         - repo: git@ssh.dev.azure.com:v3/TheSoftwareTailors/Website/Website
           dest: thesoftwaretailors.com
 
-    - name: Delete the public folders of the websites made with Hugo
-      ansible.builtin.file:
-        path: '{{ item }}/public'
-        state: absent
-      loop:
-        - /tmp/my-websites-dock/fabioscagliola.com/fabioscagliola
-        - /tmp/my-websites-dock/laurabernasconi.com/website
-        - /tmp/my-websites-dock/nothence.com/nothence
-
     - name: Build the websites made with Hugo
       command: hugo
       args:
-        chdir: '{{ item }}'
+        chdir: "{{ item }}"
       loop:
         - /tmp/my-websites-dock/fabioscagliola.com/fabioscagliola
         - /tmp/my-websites-dock/laurabernasconi.com/website
         - /tmp/my-websites-dock/nothence.com/nothence
 
-    - name: Copy the contents of the websites
+    - name: Copy the contents of the websites from the temporary folder
       ansible.builtin.copy:
-        src: '{{ item.source }}/'
-        dest: './websites/{{ item.target }}/contents'
+        src: "{{ item.source }}/"
+        dest: "./websites/{{ item.target }}/contents"
       loop:
         - source: /tmp/my-websites-dock/assessyoursecurity.com/AssessYourSecuritySite
           target: assessyoursecurity.com
@@ -123,47 +114,80 @@
         - source: /tmp/my-websites-dock/thesoftwaretailors.com/TheSoftwareTailorsSite
           target: thesoftwaretailors.com
 
+    - name: Compress the websites folders
+      ansible.builtin.archive:
+        path: ./websites
+        dest: ./websites.tar.gz
+
+- name: Deploy the websites to the remote host
+  hosts: my_websites_dock
+  tags: copy-websites
+  tasks:
+    - name: Delete the temporary folder
+      ansible.builtin.file:
+        path: /tmp/my-websites-dock
+        state: absent
+
+    - name: Create a temporary folder
+      ansible.builtin.file:
+        path: /tmp/my-websites-dock/websites
+        state: directory
+
+    - name: Upload the files required to build the image
+      ansible.builtin.copy:
+        src: "./{{ item }}"
+        dest: "/tmp/my-websites-dock/{{ item }}"
+      loop:
+        - Dockerfile
+        - nginx.conf
+        - websites.tar.gz
+
+    - name: Extract the compressed websites folder
+      ansible.builtin.unarchive:
+        src: /tmp/my-websites-dock/websites.tar.gz
+        dest: /tmp/my-websites-dock
+        remote_src: yes
+
 - name: Build the image
-  hosts: localhost
+  hosts: my_websites_dock
   tags: build-image
   tasks:
     - name: Build the image
       community.docker.docker_image:
         build:
-          path: .
+          path: /tmp/my-websites-dock
           nocache: true
         force_source: true
         name: my-websites-dock
         source: build
 
-- name: Deploy the container
-  become: true
-  hosts: localhost
-  tags: deploy
+- name: Restart the container
+  hosts: my_websites_dock
+  tags: restart-container
   tasks:
-    - name: Stop the container
-      community.docker.docker_container:
-        image: my-websites-dock
-        name: my-websites-dock
-        state: stopped
-
-    - name: Start the container
+    - name: Restart the container
       community.docker.docker_container:
         image: my-websites-dock
         name: my-websites-dock
         ports:
           - "80:80"
           - "443:443"
+        restart: true
         restart_policy: unless-stopped
         state: started
 
-- name: Cleanup the local environment
+- name: Cleanup the local host
   hosts: localhost
-  tags: cleanup
+  tags: cleanup-local
   tasks:
-    - name: Delete the contents folders
+    - name: Delete the websites folder
       ansible.builtin.file:
         path: ./websites
+        state: absent
+
+    - name: Delete the compressed websites folder
+      ansible.builtin.file:
+        path: ./websites.tar.gz
         state: absent
 
     - name: Delete the temporary folder

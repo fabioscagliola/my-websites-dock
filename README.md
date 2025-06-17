@@ -1,12 +1,14 @@
-# My Websites' Dock
+# My Websites Dock
 
-*Anchoring my websites in a container*
+Anchoring my websites in a container
 
 ## Overview
 
 I use Docker to host all my static websites in one nginx container.
 
 I wrote [this Terraform configuration file](main.tf) to create a VM on Azure, where the container is hosted.
+
+I have recently migrated my dock to Hetzner and there I have not yet terraformed the virtual machine.
 
 I manually installed Docker on the VM, then I wrote [this Ansible playbook](my-websites-dock.yml) to build and deploy the container to the VM.
 
@@ -18,9 +20,7 @@ ansible-playbook my-websites-dock.yml
 
 ## Playbook details
 
-The playbook performs the following tasks on my local computer:
-
-- Create the websites' folders using the following structure
+The playbook performs the tasks below to build the websites on the local host in a folder structured as follows.
 
 ```
 websites
@@ -32,8 +32,8 @@ websites
 │   │   ├── index.html
 │   │   ├── ...
 │   │
-│   │── fabioscagliola.com.crt
-│   │── fabioscagliola.com.key
+│   ├── fabioscagliola.com.crt
+│   ├── fabioscagliola.com.key
 │
 ├── nothence.com
 │   │
@@ -42,27 +42,23 @@ websites
 │   │   ├── index.html
 │   │   ├── ...
 │   │
-│   │── nothence.com.crt
-│   │── nothence.com.key
+│   ├── nothence.com.crt
+│   ├── nothence.com.key
 │
 ```
 
-- Copy the .crt files and .key files from my local computer to the websites' folders—TODO: move the files to a different online secure location, such as a vault
+- Create the websites folders
+- Copy the .crt and .key files
 - Create a temporary folder
 - Clone the repos to the temporary folder
-- For the websites made with Hugo, delete the public folders and build the websites
-- Copy the contents from the temporary folder to the websites' folders
-- Build the Docker image and compress it
+- Build the websites made with Hugo
+- Copy the contents of the websites from the temporary folder
+- Compress the websites folders
 
-Then the playbook performs the following tasks on the VM:
+Then the playbook performs the following tasks to deploy the websites to the remote host:
 
-- Stop the container
-- Prune the containers and images
-- Upload the compressed image
-- Extract the image
-- Load the image
-- Delete the compressed image
-- Start the container
-
-Finally, it cleans up the local environment by deleting the above structure, the temporary folder, and the Docker images
+- Upload the files required to build the image
+- Extract the compressed websites folder
+- Build the image
+- Restart the container
 
