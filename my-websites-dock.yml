@@ -22,7 +22,7 @@
 
     - name: Copy the .crt files
       ansible.builtin.copy:
-        src: "~/Downloads/certificates/{{ item }}/{{ item }}.crt"
+        src: "~/Library/CloudStorage/OneDrive-TheCodeTailorsSL/Data/certificates/{{ item }}/{{ item }}.crt"
         dest: "./websites/{{ item }}"
       loop:
         - assessyoursecurity.com
@@ -36,7 +36,7 @@
 
     - name: Copy the .key files
       ansible.builtin.copy:
-        src: "~/Downloads/certificates/{{ item }}/{{ item }}.key"
+        src: "~/Library/CloudStorage/OneDrive-TheCodeTailorsSL/Data/certificates/{{ item }}/{{ item }}.key"
         dest: "./websites/{{ item }}"
       loop:
         - assessyoursecurity.com
