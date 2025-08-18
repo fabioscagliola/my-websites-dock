@@ -80,7 +80,7 @@
           dest: thesoftwaretailors.com
 
     - name: Build the websites made with Hugo
-      command: hugo
+      command: hugo build -F
       args:
         chdir: "{{ item }}"
       loop:
